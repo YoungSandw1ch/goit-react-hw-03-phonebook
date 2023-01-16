@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
-import { Box, Title } from './Common';
-import { Container } from './Container';
-import { ContactForm } from './ContactForm';
-import { ContactList } from './ContactList';
-import { Filter } from './Filter';
+import { Title } from '../Common';
+import { Wrapper } from './App.styled';
+import { Container } from '../Container';
+import { ContactForm } from '../ContactForm';
+import { ContactList } from '../ContactList';
+import { Filter } from '../Filter';
 import { initialState } from 'constants';
 import { report } from 'utils';
 
@@ -54,33 +55,25 @@ export class App extends Component {
 
   render() {
     const filteredContact = this.filterContacts(this.state);
+    const { filter } = this.state;
+    const { contactFormSubmit, setFilterState, deleteContact } = this;
     return (
       <Container>
-        <Box
-          mx="auto"
-          width="half"
-          border="medium"
-          borderRadius="normal"
-          px={4}
-          py={5}
-          borderColor="blue"
-          boxShadow="phoneBook"
-          backgroundColor="autumnOrange.cotton"
-        >
+        <Wrapper>
           <Title mb={4} color="blue">
             Phonebook
           </Title>
-          <ContactForm onSubmit={this.contactFormSubmit} />
+          <ContactForm onSubmit={contactFormSubmit} />
 
           <Title as="h2" mb={4} color="blue" fontSize="ms">
             Contacts
           </Title>
-          <Filter onFilter={this.setFilterState} value={this.state.filter} />
+          <Filter onFilter={setFilterState} value={filter} />
           <ContactList
             contacts={filteredContact}
-            onContactDelete={this.deleteContact}
+            onContactDelete={deleteContact}
           />
-        </Box>
+        </Wrapper>
       </Container>
     );
   }
