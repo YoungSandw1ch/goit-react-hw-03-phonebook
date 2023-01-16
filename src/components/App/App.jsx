@@ -9,11 +9,38 @@ import { Filter } from '../Filter';
 import { initialState } from 'constants';
 import { report } from 'utils';
 
+const LS_CONTACTS = 'ls_contacts';
+
 export class App extends Component {
   state = {
-    contacts: initialState,
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    try {
+      const contacts = JSON.parse(localStorage.getItem(LS_CONTACTS));
+      //добавляю контакти в state спочатку зі змінної для ментора для зручності перевірки
+      if (!contacts) {
+        this.setState({ contacts: initialState });
+      } else {
+        this.setState({ contacts });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  componentDidUpdate(_, pS) {
+    try {
+      const { contacts } = this.state;
+      if (pS.contacts.length !== contacts.length) {
+        localStorage.setItem(LS_CONTACTS, JSON.stringify(contacts));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   contactFormSubmit = data => {
     const { name, number } = data;
@@ -64,7 +91,6 @@ export class App extends Component {
             Phonebook
           </Title>
           <ContactForm onSubmit={contactFormSubmit} />
-
           <Title as="h2" mb={4} color="blue" fontSize="ms">
             Contacts
           </Title>
